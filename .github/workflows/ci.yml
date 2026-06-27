@@ -28,8 +28,10 @@ jobs:
       - name: Install R packages
         shell: bash
         run: |
-          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"), repos="https://cloud.r-project.org")'
+          # use-public-rspm above → binary installs on Linux (svglite needs systemfonts/textshaping)
+          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
           Rscript -e 'install.packages("r-helper/ggplotpy", repos=NULL, type="source")'
+          Rscript -e 'stopifnot(requireNamespace("ggplot2", quietly=TRUE), requireNamespace("svglite", quietly=TRUE))'
 
       - name: Install ggplotpy (dev)
         run: pip install -e ".[dev]"
@@ -63,8 +65,10 @@ jobs:
       - name: Install R packages
         shell: bash
         run: |
-          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"), repos="https://cloud.r-project.org")'
+          # use-public-rspm above → binary installs on Linux (svglite needs systemfonts/textshaping)
+          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
           Rscript -e 'install.packages("r-helper/ggplotpy", repos=NULL, type="source")'
+          Rscript -e 'stopifnot(requireNamespace("ggplot2", quietly=TRUE), requireNamespace("svglite", quietly=TRUE))'
 
       - name: Install ggplotpy (dev)
         run: pip install -e ".[dev]"

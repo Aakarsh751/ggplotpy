@@ -31,7 +31,8 @@ jobs:
       - name: Install R packages
         shell: bash
         run: |
-          Rscript -e 'install.packages("ggplot2", repos="https://cloud.r-project.org")'
+          Rscript -e 'install.packages("ggplot2")'
+          Rscript -e 'stopifnot(requireNamespace("ggplot2", quietly=TRUE))'
 
       - name: Install ggplotpy
         run: pip install -e .
