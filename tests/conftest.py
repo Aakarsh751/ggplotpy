@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gc
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -74,6 +75,15 @@ def _r_package_available(name: str) -> bool:
         return False
 
 
+def _visual_baseline_supported() -> bool:
+    """SVG hash baselines are Windows-seeded; font metrics differ on Linux/macOS."""
+    if os.environ.get("GGPLOTPY_SKIP_VISUAL") == "1":
+        return False
+    if os.environ.get("GGPLOTPY_RUN_VISUAL") == "1":
+        return True
+    return sys.platform == "win32"
+
+
 @pytest.fixture(scope="session")
 def r_available() -> bool:
     return _r_available()
@@ -138,3 +148,9 @@ def pytest_collection_modifyitems(config, items):
                 import pyarrow  # noqa: F401
             except ImportError:
                 item.add_marker(pytest.mark.skip(reason="pyarrow not available"))
+        elif "visual" in item.keywords and not _visual_baseline_supported():
+            item.add_marker(
+                pytest.mark.skip(
+                    reason="SVG hash baselines are Windows-only (font/render variance on Linux/macOS)"
+                )
+            )
