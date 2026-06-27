@@ -1,0 +1,19 @@
+---
+description: T0–T3 verification tiers, golden rules, pytest before end
+alwaysApply: true
+---
+
+# ggplotpy verification
+
+- **T0:** R-free — always on PR (`tests/unit/`).
+- **T1:** R render smoke (`tests/integration/`).
+- **T2:** `to_r()` golden parity (`tests/parity/`, `tests/golden/`).
+- **T3:** Visual gallery tol `1e-3` (D-P008).
+
+**Golden updates:** intentional only; PR diff + `progress_log.md` note (D-P007).
+
+**Markers:** `needs_r`, `needs_ggplot2`, `needs_*` extension — skip gracefully (D-P009).
+
+**Fast loop:** `GGPLOTPY_SKIP_NOTEBOOKS=1 pytest tests/unit tests/integration -q -m "not slow"`
+
+Spec: `docs/validation_strategy.md`, commands: `docs/testing_guide.md`.

@@ -1,0 +1,14 @@
+---
+description: Test layout, markers, no silent skips
+globs: tests/**
+alwaysApply: false
+---
+
+# ggplotpy tests
+
+- Layout: `unit/` (T0), `integration/` (T1), `parity/` (T2), `extensions/`, `gallery/` (T3), `golden/`.
+- Register markers in `pyproject.toml`; use `@pytest.mark.needs_*`.
+- Optional extensions: **skip with reason**, never fail core CI (D-P009).
+- No `@pytest.mark.skip` without comment linking to blocker or D-P009.
+- Golden files live in `tests/golden/` — see verification rule for update policy.
+- 13-case matrix: `docs/validation_strategy.md`.

@@ -1,0 +1,69 @@
+# conda-forge feedstock recipe for ggplotpy.
+#
+# Publishing flow (see ../../RELEASING.md):
+#   1. Release to PyPI (tag ggplotpy-v<version> → .github/workflows/publish.yml).
+#   2. Fork https://github.com/conda-forge/staged-recipes, drop this file under
+#      recipes/ggplotpy/meta.yaml, and update {{ sha256 }} with the PyPI sdist hash:
+#         python ../../scripts/pypi_sha256.py <version>
+#   3. Open a PR; conda-forge bot builds noarch and creates the feedstock.
+#
+# `r-base` + `r-ggplot2` are real runtime deps, so `conda install -c conda-forge
+# ggplotpy` gives a working stack on Windows/macOS/Linux with no manual R.
+
+{% set name = "ggplotpy" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: REPLACE_WITH_PYPI_SDIST_SHA256
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  entry_points:
+    - ggplotpy-bootstrap = ggplotpy.runtime.bootstrap:main
+
+requirements:
+  host:
+    - python >=3.10
+    - pip
+    - hatchling
+  run:
+    - python >=3.10
+    - rpy2 >=3.6
+    - numpy >=1.24
+    - pandas >=2.0
+    - r-base >=4.3
+    - r-ggplot2
+    - r-rlang
+    - r-svglite
+
+test:
+  imports:
+    - ggplotpy
+    - ggplotpy.core.gg
+    - ggplotpy.runtime.bootstrap
+  commands:
+    - ggplotpy-bootstrap --help
+
+about:
+  home: https://github.com/Aakarsh751/ggplotpy
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: Real ggplot2 from Python via rpy2 — faithful + grammar and R parity
+  description: |
+    ggplotpy drives R's real ggplot2 (and its extension ecosystem) from Python via
+    rpy2 — the faithful `+` grammar, Pythonic aes() with string expressions,
+    Jupyter rendering, and any installed ggplot2 extension. Accepts pandas,
+    dict, NumPy, Arrow, polars, and GeoPandas data.
+  doc_url: https://aakarsh751.github.io/ggplotpy/
+  dev_url: https://github.com/Aakarsh751/ggplotpy
+
+extra:
+  recipe-maintainers:
+    - Aakarsh751

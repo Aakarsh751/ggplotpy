@@ -1,0 +1,13 @@
+---
+description: ggplotpy mission, Hybrid G layering, import boundaries
+alwaysApply: true
+---
+
+# ggplotpy core
+
+- **Mission:** Real ggplot2 from Python via rpy2 — Hybrid G (D-P001). Not plotnine.
+- **Layers:** user → `core/` → `codegen/`/`generated/` → `data/` + `backend/` → R.
+- **No `importr("ggplot2")` outside `backend/`.** Lazy init (D-P004).
+- **No** method-call plot APIs, matplotlib GoG, or vendored R wheels (v1).
+- **Escape hatch:** `R("...")` and `to_r()` must remain available.
+- Read `AGENTS.md` + `STATUS.md` on session start.

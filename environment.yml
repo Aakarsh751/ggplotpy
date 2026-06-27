@@ -1,0 +1,18 @@
+# Test after create: conda activate ggplotpy && pip install -e ".[dev]" && scripts/run_tests.ps1 -Tier tier0
+# Conda environment for ggplotpy development (v0.5+).
+# Recommended path: conda-forge pulls r-base, r-ggplot2, and binary rpy2 together.
+name: ggplotpy
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - r-base>=4.4
+  - r-ggplot2
+  - r-svglite
+  - r-rlang
+  - rpy2>=3.6
+  - numpy>=1.24
+  - pandas>=2.0
+  - pip
+  - pip:
+      - -e ".[dev,arrow]"

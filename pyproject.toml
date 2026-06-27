@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ggplotpy"
+dynamic = ["version"]
+description = "Real ggplot2 from Python via rpy2 — faithful + grammar and R parity"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Aakarsh Gupta", email = "aakarshg@uw.edu" }]
+keywords = ["ggplot2", "rpy2", "visualization", "grammar of graphics", "R", "plotting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = [
+    "rpy2>=3.6",
+    "numpy>=1.24",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+arrow = ["pyarrow>=14"]
+polars = ["polars>=0.20", "pyarrow>=14"]
+geo = ["geopandas>=0.14"]
+dev = ["pytest>=7", "ruff", "nbformat>=5", "nbclient>=0.9"]
+docs = ["sphinx>=7", "myst-parser>=2", "furo>=2024", "sphinx-design>=0.5", "sphinx-copybutton>=0.5"]
+
+[project.scripts]
+ggplotpy-bootstrap = "ggplotpy.runtime.bootstrap:main"
+
+[project.urls]
+Homepage = "https://github.com/Aakarsh751/ggplotpy"
+Documentation = "https://aakarsh751.github.io/ggplotpy/"
+Repository = "https://github.com/Aakarsh751/ggplotpy"
+Issues = "https://github.com/Aakarsh751/ggplotpy/issues"
+Changelog = "https://github.com/Aakarsh751/ggplotpy/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/ggplotpy/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ggplotpy"]
+# Ship the tiny R companion package inside the wheel so `ggplotpy-bootstrap` /
+# install_r() can install it from any environment (not just a source checkout).
+force-include = { "r-helper/ggplotpy" = "ggplotpy/_r_helper/ggplotpy" }
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/ggplotpy",
+    "r-helper/ggplotpy",
+    "README.md",
+    "LICENSE",
+]
+
+[tool.pytest.ini_options]
+# OOM-safe pytest env (see docs/testing_guide.md):
+#   GGPLOTPY_SKIP_INTEGRATION=1  skip integration/gallery/parity/extensions collection (CI matrix default)
+#   GGPLOTPY_RUN_HEAVY=1         collect and run all suites in one process (local only; may OOM)
+#   GGPLOTPY_SKIP_NOTEBOOKS=1    skip notebook execute tests during fast loops
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "needs_r: requires an R installation",
+    "needs_ggplot2: requires ggplot2 R package",
+    "needs_ggrepel: requires ggrepel R package",
+    "needs_patchwork: requires patchwork R package",
+    "needs_gganimate: requires gganimate R package",
+    "needs_sf: requires sf R package",
+    "needs_arrow: requires pyarrow",
+    "slow: slow test",
+    "parity: golden parity test",
+    "visual: visual regression test",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

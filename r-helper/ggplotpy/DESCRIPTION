@@ -1,0 +1,12 @@
+Package: ggplotpy
+Title: Python Bridge Helpers for ggplot2
+Version: 0.0.1
+Authors@R: person("Aakarsh", "Gupta", email = "aakarshg@uw.edu", role = c("aut", "cre"))
+Description: R companion for the ggplotpy Python package — aes_from_strings NSE bridge.
+License: Apache-2.0
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports:
+    ggplot2,
+    rlang
+RoxygenNote: 7.3.0

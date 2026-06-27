@@ -1,0 +1,66 @@
+name: Codegen
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "src/ggplotpy/codegen/**"
+      - "src/ggplotpy/generated/**"
+      - "scripts/generate_stubs.py"
+  pull_request:
+    paths:
+      - "src/ggplotpy/codegen/**"
+      - "src/ggplotpy/generated/**"
+      - "scripts/generate_stubs.py"
+
+jobs:
+  staleness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.4"
+
+      - name: Install R packages
+        shell: bash
+        run: |
+          Rscript -e 'install.packages("ggplot2", repos="https://cloud.r-project.org")'
+
+      - name: Install ggplotpy
+        run: pip install -e .
+
+      - name: Detect ggplot2 availability
+        id: ggplot2
+        shell: bash
+        run: |
+          if Rscript -e 'quit(status=ifelse(requireNamespace("ggplot2", quietly=TRUE), 0, 1))'; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Regenerate ggplot2 reflected stubs
+        run: python scripts/generate_stubs.py --skip-if-no-r
+
+      - name: Fail if generated tree is stale
+        if: steps.ggplot2.outputs.available == 'true'
+        run: |
+          git diff --exit-code src/ggplotpy/generated/ || (
+            echo "Generated stubs are stale. Run: python scripts/generate_stubs.py"
+            git diff --stat src/ggplotpy/generated/
+            exit 1
+          )
+
+      - name: Skip staleness check (no ggplot2)
+        if: steps.ggplot2.outputs.available != 'true'
+        run: echo "Skipping staleness check — ggplot2 not available"
+
+      - name: Verify generated modules import
+        run: |
+          python -c "from ggplotpy.generated import load_ggplot2_symbol; from ggplotpy.codegen.emit import emit_pyi_stub; print(emit_pyi_stub('geom_point', ['mapping', 'data', '...'])[:40])"

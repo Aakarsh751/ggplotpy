@@ -1,0 +1,14 @@
+---
+description: Reflection codegen and generated stub staleness
+globs: src/ggplotpy/codegen/**,src/ggplotpy/generated/**
+alwaysApply: false
+---
+
+# ggplotpy codegen
+
+- Introspect via `getNamespaceExports`, `formals()`, `.Rd` — research Phase 5.
+- **Build-time:** commit `generated/` + `.pyi` for ggplot2.
+- **Runtime:** `ext/` lazy reflection for other packages.
+- CI must fail if generated tree stale vs R introspection.
+- Regenerate on ggplot2 bump; test 3.5.x and 4.0.x matrix.
+- Do not hand-edit generated files — fix emitter or R source mapping.

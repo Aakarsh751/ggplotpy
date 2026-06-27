@@ -1,0 +1,19 @@
+---
+description: Session start/end memory and STATUS updates
+alwaysApply: true
+---
+
+# ggplotpy session protocol
+
+## Start
+1. Read `STATUS.md`, last `project_memory/progress_log.md` block, `blockers.md`.
+2. State milestone, task ID, files to touch, verification tier(s).
+3. Run `pytest tests/unit -q` when tests exist.
+
+## End
+1. Run task-appropriate tiers (T0 min; render→T1; aes/to_r→T2).
+2. Append session block to `progress_log.md`.
+3. Update `STATUS.md`; log pytest commands + pass/fail.
+4. New decisions → `decisions.md`; gotchas → `discoveries.md`.
+
+Use `project_memory/resume_prompts.md` #1 for general resume.

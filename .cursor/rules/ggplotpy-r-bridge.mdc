@@ -1,0 +1,14 @@
+---
+description: rpy2 bridge, lazy R init, Windows R_HOME
+globs: src/ggplotpy/backend/**,src/ggplotpy/runtime/**
+alwaysApply: false
+---
+
+# ggplotpy R bridge
+
+- All R session logic lives in `backend/`; bootstrap in `runtime/`.
+- **Lazy `importr`:** cache namespace; never at package import (D-P004).
+- **Windows:** document/test with `R_HOME` + R `bin\x64` on PATH.
+- Render: R graphics device → bytes; no file leaks in notebook path.
+- Translate errors; expose `last_r_code()` from `core/errors.py`.
+- Reference: `robstatm-py/src/robstatm_py/_r.py` — adapt, don't import.
