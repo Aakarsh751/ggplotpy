@@ -28,8 +28,12 @@ jobs:
       - name: Install R packages
         shell: bash
         run: |
-          # use-public-rspm above → binary installs on Linux (svglite needs systemfonts/textshaping)
-          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            # use-public-rspm → binary installs (svglite needs systemfonts/textshaping)
+            Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
+          else
+            Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"), repos="https://cloud.r-project.org")'
+          fi
           Rscript -e 'install.packages("r-helper/ggplotpy", repos=NULL, type="source")'
           Rscript -e 'stopifnot(requireNamespace("ggplot2", quietly=TRUE), requireNamespace("svglite", quietly=TRUE))'
 
@@ -65,8 +69,12 @@ jobs:
       - name: Install R packages
         shell: bash
         run: |
-          # use-public-rspm above → binary installs on Linux (svglite needs systemfonts/textshaping)
-          Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            # use-public-rspm → binary installs (svglite needs systemfonts/textshaping)
+            Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"))'
+          else
+            Rscript -e 'install.packages(c("ggplot2", "rlang", "svglite"), repos="https://cloud.r-project.org")'
+          fi
           Rscript -e 'install.packages("r-helper/ggplotpy", repos=NULL, type="source")'
           Rscript -e 'stopifnot(requireNamespace("ggplot2", quietly=TRUE), requireNamespace("svglite", quietly=TRUE))'
 
