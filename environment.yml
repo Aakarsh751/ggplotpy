@@ -6,7 +6,7 @@ channels:
   - conda-forge
 dependencies:
   - python>=3.10
-  - r-base>=4.4
+  - r-base>=4.5
   - r-ggplot2
   - r-svglite
   - r-rlang

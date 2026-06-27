@@ -78,6 +78,7 @@ def test_ggplotpy_getattr_resolves_ggplot2_export():
     assert ggplotpy.geom_bar is fn
 
 
+@pytest.mark.needs_ggplot2
 def test_ggplotpy_getattr_unknown_raises():
     import ggplotpy
 
